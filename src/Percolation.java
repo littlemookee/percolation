@@ -99,6 +99,7 @@ public class Percolation
 	 */
 	public boolean percolates()
 	{
+		if (N==1) return opened[0][0];
 		return uf.connected(0, N*N+1);
 	}
 	
