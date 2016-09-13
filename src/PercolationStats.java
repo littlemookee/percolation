@@ -20,10 +20,17 @@ public class PercolationStats
 	 */
 	public PercolationStats(int n, int trials)
 	{
+		if (n <= 0)
+			throw new java.lang.IllegalArgumentException();
+		
+		if (trials <= 0)
+			throw new java.lang.IllegalArgumentException();
+		
+		
 		T = trials;
 		probs = new double[T];		
 		
-		for (int t=0; t<T; t++)
+		for (int t = 0; t < T; t++)
 		{
 			Percolation percolation = new Percolation(n);
 			int openSitesNum = 0;

@@ -20,17 +20,20 @@ public class Percolation
 	 */
 	public Percolation(int n)
 	{
+		if (n <= 0)
+			throw new java.lang.IllegalArgumentException();
+		
 		N = n;
 		
 		opened = new boolean[N][N];
-		for (int i=0; i<N; i++)
-			for(int j=0; j<n; j++)
+		for (int i = 0; i < N; i++)
+			for(int j = 0; j < n; j++)
 				opened[i][j] = false;
 		
 		uf = new WeightedQuickUnionUF(N*N+2);
 		fullUF = new WeightedQuickUnionUF(N*N+1);
 		
-		for (int i=1; i<=N; i++)
+		for (int i = 1; i <= N; i++)
 		{
 			uf.union(0, i);
 			uf.union(index(N,i), N*N+1);
@@ -54,15 +57,15 @@ public class Percolation
 		
 		opened[i-1][j-1] = true;
 		
-		for (int k=i-1; k<=i+1; k+=2)
-			if (k>=1 && k<=N && opened[k-1][j-1]) {
+		for (int k = i-1; k <= i+1; k += 2)
+			if (k >= 1 && k <= N && opened[k-1][j-1]) {
 				uf.union(index(k,j), index(i,j));
 				fullUF.union(index(k,j), index(i,j));
 			}
 				
 		
-		for (int l=j-1; l<=j+1; l+=2)
-			if (l>=1 && l<=N && opened[i-1][l-1]) {
+		for (int l = j-1; l <= j+1; l+=2)
+			if (l >= 1 && l <= N && opened[i-1][l-1]) {
 				uf.union(index(i,l), index(i,j));
 				fullUF.union(index(i,l), index(i,j));
 			}
@@ -76,7 +79,7 @@ public class Percolation
 	 */
 	public boolean isOpen(int i, int j)
 	{
-		if (i<1 || i>N || j<1 || j>N)
+		if (i < 1 || i > N || j < 1 || j > N)
 			throw new java.lang.IndexOutOfBoundsException(); 
 		
 		return opened[i-1][j-1];
@@ -99,7 +102,7 @@ public class Percolation
 	 */
 	public boolean percolates()
 	{
-		if (N==1) return opened[0][0];
+		if (N == 1) return opened[0][0];
 		return uf.connected(0, N*N+1);
 	}
 	
