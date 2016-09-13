@@ -2,12 +2,11 @@
  * 
  * @author:			Mikhail Zulkarneev
  * Created:			09.09.2016
- * Last modified:	09.09.2016
+ * Last modified:	13.09.2016
  * 
  */
 
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
+import edu.princeton.cs.algs4.*;
 
 public class PercolationStats
 {
@@ -22,12 +21,11 @@ public class PercolationStats
 	public PercolationStats(int n, int trials)
 	{
 		T = trials;
-
-		probs = new double[T];
-		Percolation percolation = new Percolation(n);
+		probs = new double[T];		
 		
-		for (int t=0; t< T; t++)
+		for (int t=0; t<T; t++)
 		{
+			Percolation percolation = new Percolation(n);
 			int openSitesNum = 0;
 			while (!percolation.percolates())
 			{
@@ -39,7 +37,7 @@ public class PercolationStats
 					percolation.open(i, j);
 				}
 			}
-			probs[t] = openSitesNum / (n*n);
+			probs[t] = 1.0 * openSitesNum / (n*n);
 		}
 	}
 	
@@ -64,7 +62,7 @@ public class PercolationStats
 	 */
 	public double confidenceLo()
 	{
-		return (mean() - 1.96*stddev()) / Math.sqrt(T);
+		return mean() - 1.96*stddev() / Math.sqrt(T);
 	}
 	
 	/**
@@ -72,10 +70,16 @@ public class PercolationStats
 	 */
 	public double confidenceHi()
 	{
-		return (mean() + 1.96*stddev()) / Math.sqrt(T);
+		return mean() + 1.96*stddev() / Math.sqrt(T);
 	}
 
 	public static void main(String[] args)
 	{
+		int n = StdIn.readInt();
+		int trials = StdIn.readInt();
+		PercolationStats ps = new PercolationStats(n, trials);
+		StdOut.printf("mean\t\t\t= %f\n", ps.mean());
+		StdOut.printf("stddev\t\t\t= %f\n", ps.stddev());
+		StdOut.printf("95%% confidence interval\t= %f, %f\n", ps.confidenceLo(), ps.confidenceHi());		
 	}
 }

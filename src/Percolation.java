@@ -2,7 +2,7 @@
  * 
  * @author:			Mikhail Zulkarneev
  * Created:			08.09.2016
- * Last modified:	09.09.2016
+ * Last modified:	13.09.2016
  * 
  */
 
@@ -12,7 +12,7 @@ public class Percolation
 {
 	private WeightedQuickUnionUF uf, fullUF;
 	private boolean[][] opened;
-	int N;
+	private int N;
 	
 	/**
 	 * Create n-by-n grid, with all sites blocked
@@ -27,8 +27,8 @@ public class Percolation
 			for(int j=0; j<n; j++)
 				opened[i][j] = false;
 		
-		uf = new WeightedQuickUnionUF(N+2);
-		fullUF = new WeightedQuickUnionUF(N+1);
+		uf = new WeightedQuickUnionUF(N*N+2);
+		fullUF = new WeightedQuickUnionUF(N*N+1);
 		
 		for (int i=1; i<=N; i++)
 		{
@@ -55,19 +55,17 @@ public class Percolation
 		opened[i-1][j-1] = true;
 		
 		for (int k=i-1; k<=i+1; k+=2)
-			if (k>=1 && k<=N)
-			{
+			if (k>=1 && k<=N && opened[k-1][j-1]) {
 				uf.union(index(k,j), index(i,j));
-				fullUF.union(index(k,j), index(i,j));				
+				fullUF.union(index(k,j), index(i,j));
 			}
 				
 		
 		for (int l=j-1; l<=j+1; l+=2)
-			if (j>=1 && j<=N)
-			{
+			if (l>=1 && l<=N && opened[i-1][l-1]) {
 				uf.union(index(i,l), index(i,j));
-				fullUF.union(index(i,l), index(i,j));				
-			}						
+				fullUF.union(index(i,l), index(i,j));
+			}
 	}
 	
 	/**
@@ -78,10 +76,10 @@ public class Percolation
 	 */
 	public boolean isOpen(int i, int j)
 	{
-		if (i<1 || i>=N || j<1 || j>=N)
+		if (i<1 || i>N || j<1 || j>N)
 			throw new java.lang.IndexOutOfBoundsException(); 
 		
-		return opened[i+1][j+1];
+		return opened[i-1][j-1];
 	}
 	
 	/**
